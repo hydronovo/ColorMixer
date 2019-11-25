@@ -17,7 +17,7 @@
             <Style TargetType="TextBlock">
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="HorizontalAlignment" Value="Center" />
-                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontSize" Value="15" />
                 <Setter Property="FontWeight" Value="Bold" />
             </Style>
         </Grid.Resources>
@@ -29,11 +29,11 @@
             <ColumnDefinition Width="60"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Button Name="PickButton" Margin="3" Content="Pick" Click="PickButton_OnClick"/>
+        <Button Name="PickButton" Margin="5" Content="Pick" Click="PickButton_OnClick"/>
         <TextBlock Grid.Column="1" Text="{Binding R}" Foreground="Red"/>
         <TextBlock Grid.Column="2" Text="{Binding G}" Foreground="Green"/>
         <TextBlock Grid.Column="3" Text="{Binding B}" Foreground="Blue"/>
-        <Canvas Grid.Column="4">
+        <Canvas Grid.Column="4" Margin="5">
             <Canvas.Background>
                 <SolidColorBrush Color="{Binding DataContext.Color, Converter={StaticResource DrawingColorToMediaColorConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:ColorView}}}"/>
             </Canvas.Background>

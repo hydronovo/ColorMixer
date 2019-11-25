@@ -4,13 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ColorMixer.UI"
+        xmlns:converters="clr-namespace:ColorMixer.UI.Converters"
         xmlns:viewModels="clr-namespace:ColorMixer.UI.ViewModels"
         xmlns:views="clr-namespace:ColorMixer.UI.Views"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=viewModels:ViewModel, IsDesignTimeCreatable=True}"
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
-
+        <converters:DrawingColorToMediaColorConverter x:Key="DrawingColorToMediaColorConverter" />
     </Window.Resources>
     <Grid>
         <Grid.Resources>
@@ -25,14 +26,35 @@
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="40"/>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="60"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Target"/>
         <views:ColorView Grid.Row="0" Grid.Column="1" DataContext="{Binding TargetColor}"/>
-        <views:ColorView Grid.Row="1" Grid.Column="1" DataContext="{Binding MixColor1}"/>
-        <views:ColorView Grid.Row="2" Grid.Column="1" DataContext="{Binding MixColor2}"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Color1"/>
+        <views:ColorView Grid.Row="1" Grid.Column="1" DataContext="{Binding Color1}"/>
+        <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Color1Ratio, StringFormat=N1}" />
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Color2"/>
+        <views:ColorView Grid.Row="2" Grid.Column="1" DataContext="{Binding Color2}"/>
+        <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Color2Ratio, StringFormat=N1}"/>
+        <Slider Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding Color1Ratio}"/>
+        <Canvas Grid.Row="4" Grid.Column="1" Margin="5">
+            <Canvas.Background>
+                <SolidColorBrush Color="{Binding DataContext.MixedColor.Color, Converter={StaticResource DrawingColorToMediaColorConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
+            </Canvas.Background>
+        </Canvas>
+        <Canvas Grid.Row="5" Grid.Column="1" Margin="5">
+            <Canvas.Background>
+                <SolidColorBrush Color="{Binding DataContext.CalculatedColor.Color, Converter={StaticResource DrawingColorToMediaColorConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
+            </Canvas.Background>
+        </Canvas>
     </Grid>
 </Window>

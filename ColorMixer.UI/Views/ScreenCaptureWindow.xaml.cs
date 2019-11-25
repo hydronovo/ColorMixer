@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using ColorMixer.UI.Utils;
 using ColorMixer.UI.ViewModels;
+using Application = System.Windows.Application;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using Rectangle = System.Drawing.Rectangle;
 
@@ -27,6 +28,8 @@ namespace ColorMixer.UI.Views
     /// </summary>
     public partial class ScreenCaptureWindow : Window
     {
+        private readonly ColorViewModel m_ColorPickerViewModel;
+
         private readonly Bitmap m_ScreenImage;
         private readonly Bitmap m_ScreenImageWithMargin;
 
@@ -42,25 +45,10 @@ namespace ColorMixer.UI.Views
             InitializeComponent();
             SetSize(fullScreenSize);
 
-            Background = new ImageBrush(ImageSourceFromBitmap(m_ScreenImage));
-        }
-        
-        [DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool DeleteObject([In] IntPtr hObject);
+            Background = new ImageBrush(Extensions.ImageSourceFromBitmap(m_ScreenImage));
 
-        public ImageSource ImageSourceFromBitmap(Bitmap bmp)
-        {
-            var handle = bmp.GetHbitmap();
-            try
-            {
-                return Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-            }
-            finally
-            {
-                DeleteObject(handle);
-            }
-        }
+            m_ColorPickerViewModel = (ColorViewModel)ColorPicker.DataContext;
+        }               
 
         private static Rectangle GetFullScreenSize()
         {
@@ -87,6 +75,9 @@ namespace ColorMixer.UI.Views
         
         private void ScreenCaptureWindow_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            var colorViewModel = (ColorViewModel) DataContext;
+            colorViewModel.Color = m_ColorPickerViewModel.Color;
+
             m_ScreenImage.Dispose();
             m_ScreenImageWithMargin.Dispose();
             
@@ -95,26 +86,20 @@ namespace ColorMixer.UI.Views
 
         private void ScreenCaptureWindow_OnMouseMove(object sender, MouseEventArgs e)
         {
-            UpdateColorPicker();
-        }
-
-        public void UpdateColorPicker()
-        {
             var mousePosition = Mouse.GetPosition(this);
 
             ColorPicker.SetValue(Canvas.LeftProperty, mousePosition.X - 31);
             ColorPicker.SetValue(Canvas.TopProperty, mousePosition.Y - 31);
 
-            var colorViewModel = (ColorViewModel)ColorPicker.DataContext;
-            colorViewModel.Color = m_ScreenImage.GetPixel((int)mousePosition.X, (int)mousePosition.Y);
-
             const int size = m_Margin * 2 + 1;
-            var zoomInImage = CropImage(m_ScreenImageWithMargin, new Rectangle((int) mousePosition.X, (int) mousePosition.Y, size, size));
-            
+            var zoomInImage = CropImage(m_ScreenImageWithMargin, new Rectangle((int)mousePosition.X, (int)mousePosition.Y, size, size));
+
+            m_ColorPickerViewModel.Color = m_ScreenImage.GetPixel((int)mousePosition.X, (int)mousePosition.Y);
+
             var myBrush = new ImageBrush
             {
                 Stretch = Stretch.UniformToFill,
-                ImageSource = ImageSourceFromBitmap(zoomInImage),
+                ImageSource = Extensions.ImageSourceFromBitmap(zoomInImage),
             };
             ColorPicker.ZoomInCanvas.Background = myBrush;
         }

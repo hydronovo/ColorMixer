@@ -13,7 +13,7 @@ namespace ColorMixer.UI.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var drawingColor = (System.Drawing.Color) value;
+            var drawingColor = (System.Drawing.Color)value;
             return Color.FromArgb(drawingColor.A, drawingColor.R, drawingColor.G, drawingColor.B);
         }
 

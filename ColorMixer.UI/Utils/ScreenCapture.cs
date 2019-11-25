@@ -31,6 +31,9 @@ namespace ColorMixer.UI.Utils
         [DllImport("GDI32.dll")]
         public static extern int SelectObject(int hdc, int hgdiobj);
 
+        [DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool DeleteObject([In] IntPtr hObject);
 
         //function to capture screen section       
         public static Bitmap CaptureScreen(int x, int y, int width, int height)

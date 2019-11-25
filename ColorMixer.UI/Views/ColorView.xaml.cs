@@ -35,7 +35,7 @@ namespace ColorMixer.UI.Views
             }
             mainWindow.Hide();
             var screenCaptureWindow = new ScreenCaptureWindow();
-            screenCaptureWindow.ColorPicker.DataContext = DataContext;
+            screenCaptureWindow.DataContext = DataContext;
             screenCaptureWindow.ShowDialog();
             mainWindow.Show();
         }

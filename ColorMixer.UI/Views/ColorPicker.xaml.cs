@@ -25,6 +25,7 @@ namespace ColorMixer.UI.Views
         public ColorPicker()
         {
             InitializeComponent();
+            DataContext = new ColorViewModel();
         }
     }
 }

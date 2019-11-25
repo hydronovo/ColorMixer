@@ -1,3 +1,4 @@
+using System.Drawing;
 using NUnit.Framework;
 
 namespace ColorMixer.Test
@@ -13,7 +14,8 @@ namespace ColorMixer.Test
         public void Test1()
         {
             //var colorRatio1 = new ColorRatio();
-            //Calculator.Calculate()
+            var color1Ration = Calculator.CalculateRatio(Color.Orange, Color.DarkRed, Color.Yellow);
+            var a = 1;
         }
     }
 }
